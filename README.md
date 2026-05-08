@@ -2,12 +2,7 @@
 
 A full-stack web application for managing projects and tasks with role-based access control.
 
-## Live Demo
 
-- **Frontend:** https://your-frontend-url.railway.app
-- **Backend API:** https://your-backend-url.railway.app
-
----
 
 ## Features
 
