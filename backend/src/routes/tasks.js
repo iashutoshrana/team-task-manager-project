@@ -37,22 +37,25 @@ router.get('/project/:projectId', auth, async (req, res) => {
 router.post('/', auth, async (req, res) => {
   try {
     const { title, description, status, priority, due_date, project_id, assignee_id } = req.body
+
     if (!title || !project_id) {
       return res.status(400).json({ message: 'Title and project are required' })
     }
 
     const task = await Task.create({
       title,
-      description,
-      status,
-      priority,
-      due_date,
+      description: description || null,
+      status: status || 'todo',
+      priority: priority || 'medium',
+      due_date: due_date || null,
       project_id,
-      assignee_id
+      assignee_id: assignee_id || null
     })
+
     res.status(201).json(task)
   } catch (err) {
-    res.status(500).json({ message: 'Server error' })
+    console.error(err)
+    res.status(500).json({ message: 'Server error', error: err.message })
   }
 })
 
@@ -62,16 +65,27 @@ router.put('/:id', auth, async (req, res) => {
     const task = await Task.findByPk(req.params.id)
     if (!task) return res.status(404).json({ message: 'Task not found' })
 
-    // members can only update status
+    const { title, description, status, priority, due_date, assignee_id } = req.body
+
+    const updates = {
+      title: title || task.title,
+      description: description || null,
+      status: status || task.status,
+      priority: priority || task.priority,
+      due_date: due_date ? due_date : null,
+      assignee_id: assignee_id ? Number(assignee_id) : null
+    }
+
     if (req.user.role === 'member') {
-      await task.update({ status: req.body.status })
+      await task.update({ status: status || task.status })
     } else {
-      await task.update(req.body)
+      await task.update(updates)
     }
 
     res.json(task)
   } catch (err) {
-    res.status(500).json({ message: 'Server error' })
+    console.error(err)
+    res.status(500).json({ message: 'Server error', error: err.message })
   }
 })
 
