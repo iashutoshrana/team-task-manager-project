@@ -25,71 +25,112 @@ export default function Login() {
     }
   }
 
+  const inputClass =
+    'w-full bg-[#0f0f1a] border border-neutral-800 hover:border-neutral-700 text-neutral-100 text-sm rounded-xl px-4 py-3 outline-none focus:border-indigo-500/70 focus:ring-2 focus:ring-indigo-500/10 transition-all placeholder-neutral-700'
+
   return (
-    <div className="min-h-screen bg-gray-950 flex">
+    <div className="min-h-screen bg-[#09090f] flex" style={{ fontFamily: "'DM Sans', sans-serif" }}>
 
       {/* Left panel */}
-      <div className="hidden lg:flex flex-col justify-between w-[420px] shrink-0 bg-gray-900 border-r border-gray-800 px-12 py-10">
-        <div className="flex items-center gap-2.5">
-          <div className="w-6 h-6 bg-blue-500 rounded-md" style={{ transform: 'rotate(12deg)' }} />
-          <span className="text-white font-bold text-[15px] tracking-tight">Taskflow</span>
+      <div className="hidden lg:flex flex-col justify-between w-[420px] shrink-0 border-r border-neutral-800/60 px-14 py-12 relative overflow-hidden">
+        {/* Subtle gradient orb */}
+        <div className="absolute -top-32 -left-32 w-80 h-80 rounded-full bg-indigo-600/[0.07] blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-32 -right-16 w-72 h-72 rounded-full bg-violet-600/[0.05] blur-3xl pointer-events-none" />
+
+        <div className="flex items-center gap-2.5 relative">
+          <div
+            className="w-6 h-6 rounded-[7px] shrink-0"
+            style={{ background: 'linear-gradient(135deg,#6366f1,#818cf8)', transform: 'rotate(12deg)' }}
+          />
+          <span className="text-neutral-100 font-bold text-[15px] tracking-tight" style={{ fontFamily: "'Syne', sans-serif" }}>
+            Taskflow
+          </span>
         </div>
 
-        <div>
-          <h2 className="text-white text-4xl font-bold leading-tight tracking-tight">
+        <div className="relative">
+          <h2
+            className="text-neutral-50 text-[38px] font-bold leading-[1.15] tracking-tight"
+            style={{ fontFamily: "'Syne', sans-serif", letterSpacing: '-1px' }}
+          >
             Clarity for<br />every team.
           </h2>
-          <p className="text-gray-500 mt-4 text-[15px] leading-relaxed max-w-xs">
+          <p className="text-neutral-600 mt-5 text-[15px] leading-relaxed max-w-xs">
             Manage projects, assign tasks, and track progress — all in one place.
           </p>
+
+          {/* Feature list */}
+          <div className="mt-10 space-y-3">
+            {['Kanban boards & task tracking', 'Role-based access control', 'Real-time progress insights'].map(f => (
+              <div key={f} className="flex items-center gap-3">
+                <div className="w-5 h-5 rounded-full bg-indigo-500/15 border border-indigo-500/25 flex items-center justify-center shrink-0">
+                  <svg width="8" height="7" viewBox="0 0 8 7" fill="none">
+                    <path d="M1 3.5L3 5.5L7 1.5" stroke="#818cf8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
+                <span className="text-neutral-500 text-sm">{f}</span>
+              </div>
+            ))}
+          </div>
         </div>
 
-        <div className="w-12 h-0.5 bg-blue-500 rounded-full" />
+        <div className="w-10 h-[2px] bg-indigo-500/50 rounded-full relative" />
       </div>
 
       {/* Right panel */}
-      <div className="flex-1 flex items-center justify-center px-6 py-12">
-        <div className="w-full max-w-sm">
+      <div className="flex-1 flex items-center justify-center px-6 py-12 relative">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_60%_20%,rgba(99,102,241,0.04),transparent_60%)] pointer-events-none" />
+
+        <div className="w-full max-w-sm relative">
 
           {/* Mobile brand */}
           <div className="flex items-center gap-2.5 mb-10 lg:hidden">
-            <div className="w-6 h-6 bg-blue-500 rounded-md" style={{ transform: 'rotate(12deg)' }} />
-            <span className="text-white font-bold text-[15px] tracking-tight">Taskflow</span>
+            <div
+              className="w-6 h-6 rounded-[7px] shrink-0"
+              style={{ background: 'linear-gradient(135deg,#6366f1,#818cf8)', transform: 'rotate(12deg)' }}
+            />
+            <span className="text-neutral-100 font-bold text-[15px] tracking-tight" style={{ fontFamily: "'Syne', sans-serif" }}>
+              Taskflow
+            </span>
           </div>
 
-          <div className="mb-8">
-            <h1 className="text-white text-2xl font-bold tracking-tight">Sign in</h1>
-            <p className="text-gray-500 text-sm mt-1.5">Enter your credentials to continue.</p>
+          <div className="mb-9">
+            <h1
+              className="text-neutral-50 text-2xl font-bold tracking-tight"
+              style={{ fontFamily: "'Syne', sans-serif", letterSpacing: '-0.5px' }}
+            >
+              Sign in
+            </h1>
+            <p className="text-neutral-600 text-sm mt-1.5">Enter your credentials to continue.</p>
           </div>
 
           {error && (
-            <div className="flex items-center gap-2.5 bg-red-500/8 border border-red-500/20 text-red-400 px-4 py-3 rounded-lg mb-6 text-sm">
-              <div className="w-1.5 h-1.5 rounded-full bg-red-400 shrink-0" />
+            <div className="flex items-center gap-2.5 bg-rose-500/[0.07] border border-rose-500/20 text-rose-400 px-4 py-3 rounded-xl mb-6 text-sm">
+              <div className="w-1.5 h-1.5 rounded-full bg-rose-400 shrink-0" />
               {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-1.5">
-              <label className="block text-gray-400 text-[13px] font-medium">Email address</label>
+              <label className="block text-neutral-500 text-[13px] font-medium">Email address</label>
               <input
                 type="email"
                 placeholder="you@company.com"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className="w-full bg-gray-900 border border-gray-800 text-white text-sm rounded-lg px-4 py-3 outline-none focus:border-blue-500 transition-colors placeholder-gray-600"
+                className={inputClass}
                 required
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-gray-400 text-[13px] font-medium">Password</label>
+              <label className="block text-neutral-500 text-[13px] font-medium">Password</label>
               <input
                 type="password"
                 placeholder="Enter your password"
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
-                className="w-full bg-gray-900 border border-gray-800 text-white text-sm rounded-lg px-4 py-3 outline-none focus:border-blue-500 transition-colors placeholder-gray-600"
+                className={inputClass}
                 required
               />
             </div>
@@ -97,15 +138,16 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold py-3 rounded-lg transition-colors disabled:opacity-60 disabled:cursor-not-allowed mt-1"
+              className="w-full text-white text-sm font-semibold py-3 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 hover:-translate-y-0.5 active:translate-y-0 mt-1"
+              style={{ background: 'linear-gradient(135deg,#6366f1,#818cf8)', boxShadow: '0 8px 32px rgba(99,102,241,0.25)' }}
             >
-              {loading ? 'Signing in...' : 'Sign In'}
+              {loading ? 'Signing in…' : 'Sign in'}
             </button>
           </form>
 
-          <p className="text-center text-gray-600 text-sm mt-8">
+          <p className="text-center text-neutral-700 text-sm mt-8">
             Don&apos;t have an account?{' '}
-            <Link to="/signup" className="text-blue-400 hover:text-blue-300 font-medium transition-colors">
+            <Link to="/signup" className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">
               Create one
             </Link>
           </p>

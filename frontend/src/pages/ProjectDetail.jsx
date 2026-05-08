@@ -5,19 +5,16 @@ import api from '../api/axios'
 import Navbar from '../components/Navbar'
 
 const columns = [
-  { key: 'todo', label: 'To Do', labelClass: 'text-gray-400', dotClass: 'bg-gray-600' },
-  { key: 'in_progress', label: 'In Progress', labelClass: 'text-blue-400', dotClass: 'bg-blue-500' },
-  { key: 'done', label: 'Done', labelClass: 'text-emerald-400', dotClass: 'bg-emerald-500' },
+  { key: 'todo', label: 'To Do', labelClass: 'text-neutral-400', dotClass: 'bg-neutral-600', ringClass: 'ring-neutral-700' },
+  { key: 'in_progress', label: 'In Progress', labelClass: 'text-sky-400', dotClass: 'bg-sky-500', ringClass: 'ring-sky-500/30' },
+  { key: 'done', label: 'Done', labelClass: 'text-emerald-400', dotClass: 'bg-emerald-500', ringClass: 'ring-emerald-500/30' },
 ]
 
-const priorityClass = (p) => {
-  if (p === 'high') return 'bg-red-500/10 text-red-400 ring-1 ring-red-500/20'
-  if (p === 'medium') return 'bg-yellow-500/10 text-yellow-400 ring-1 ring-yellow-500/20'
-  return 'bg-green-500/10 text-green-400 ring-1 ring-green-500/20'
+const priorityBadge = (p) => {
+  if (p === 'high') return 'bg-rose-500/10 text-rose-400 ring-1 ring-rose-500/20'
+  if (p === 'medium') return 'bg-amber-400/10 text-amber-300 ring-1 ring-amber-400/20'
+  return 'bg-emerald-500/10 text-emerald-400 ring-1 ring-emerald-500/20'
 }
-
-const inputClass = 'w-full bg-black/20 border border-white/10 text-white text-sm rounded-lg px-3 py-2.5 outline-none focus:border-blue-500 transition-colors'
-const disabledInputClass = 'w-full bg-black/20 border border-white/10 text-white text-sm rounded-lg px-3 py-2.5 outline-none opacity-40 cursor-not-allowed'
 
 export default function ProjectDetail() {
   const { id } = useParams()
@@ -111,13 +108,18 @@ export default function ProjectDetail() {
     }
   }
 
+  const isAdmin = user?.role === 'admin'
+
+  const inputClass = 'w-full bg-black/25 border border-neutral-800 hover:border-neutral-700 text-neutral-100 text-sm rounded-xl px-3 py-2.5 outline-none focus:border-indigo-500/70 focus:ring-2 focus:ring-indigo-500/10 transition-all'
+  const disabledInputClass = 'w-full bg-black/15 border border-neutral-800/50 text-neutral-500 text-sm rounded-xl px-3 py-2.5 outline-none opacity-40 cursor-not-allowed'
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0a0a0f]">
+      <div className="min-h-screen bg-[#09090f]">
         <Navbar />
-        <div className="flex flex-col items-center justify-center h-[calc(100vh-56px)] gap-3">
-          <div className="w-5 h-5 border-2 border-gray-800 border-t-blue-500 rounded-full animate-spin" />
-          <p className="text-gray-600 text-sm">Loading project...</p>
+        <div className="flex flex-col items-center justify-center h-[calc(100vh-56px)] gap-4">
+          <div className="w-5 h-5 border-2 border-neutral-800 border-t-indigo-500 rounded-full animate-spin" />
+          <p className="text-neutral-600 text-sm">Loading project…</p>
         </div>
       </div>
     )
@@ -125,10 +127,10 @@ export default function ProjectDetail() {
 
   if (!project) {
     return (
-      <div className="min-h-screen bg-[#0a0a0f]">
+      <div className="min-h-screen bg-[#09090f]">
         <Navbar />
         <div className="flex items-center justify-center h-[calc(100vh-56px)]">
-          <p className="text-gray-600 text-sm">Project not found.</p>
+          <p className="text-neutral-600 text-sm">Project not found.</p>
         </div>
       </div>
     )
@@ -137,80 +139,87 @@ export default function ProjectDetail() {
   const tasks = project.Tasks || []
   const doneCount = tasks.filter(t => t.status === 'done').length
   const percent = tasks.length > 0 ? Math.round((doneCount / tasks.length) * 100) : 0
-  const isAdmin = user?.role === 'admin'
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f]">
+    <div className="min-h-screen bg-[#09090f]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       <Navbar />
 
-      <div className="max-w-7xl mx-auto px-6 py-10">
-        <div className="flex items-start justify-between mb-8">
+      <div className="max-w-7xl mx-auto px-8 py-12">
+
+        {/* Header */}
+        <div className="flex items-start justify-between mb-10">
           <div className="flex items-start gap-3">
-            <div className="w-2.5 h-2.5 rounded-full bg-blue-500 mt-2 shrink-0" />
+            <div className="w-2.5 h-2.5 rounded-full bg-indigo-500 mt-2 shrink-0" />
             <div>
-              <h1 className="text-white text-xl font-bold tracking-tight">{project.name}</h1>
-              <p className="text-gray-600 text-sm mt-1">{project.description || 'No description provided.'}</p>
+              <h1
+                className="text-neutral-50 text-xl font-bold tracking-tight"
+                style={{ fontFamily: "'Syne', sans-serif", letterSpacing: '-0.4px' }}
+              >
+                {project.name}
+              </h1>
+              <p className="text-neutral-600 text-sm mt-1">{project.description || 'No description provided.'}</p>
             </div>
           </div>
-          <div className="flex items-center gap-4 shrink-0 ml-6">
-            <div className="flex items-center gap-2.5">
-              <div className="w-24 bg-white/5 rounded-full h-0.5">
+          <div className="flex items-center gap-5 shrink-0 ml-6">
+            <div className="flex items-center gap-3">
+              <div className="w-28 bg-white/[0.05] rounded-full h-[2px]">
                 <div
-                  className="h-0.5 rounded-full transition-all duration-700 bg-blue-500"
-                  style={{ width: `${percent}%` }}
+                  className="h-[2px] rounded-full transition-all duration-700"
+                  style={{ width: `${percent}%`, background: 'linear-gradient(90deg,#6366f1,#818cf8)' }}
                 />
               </div>
-              <span className="text-gray-600 text-xs">{percent}%</span>
+              <span className="text-neutral-600 text-xs font-medium">{percent}%</span>
             </div>
             <button
               onClick={openCreate}
-              className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2.5 rounded-lg transition"
+              className="text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5"
+              style={{ background: 'linear-gradient(135deg,#6366f1,#818cf8)', boxShadow: '0 8px 32px rgba(99,102,241,0.2)' }}
             >
               + Add Task
             </button>
           </div>
         </div>
 
-        {/* kanban board */}
+        {/* Kanban board */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {columns.map(col => {
             const colTasks = tasks.filter(t => t.status === col.key)
             return (
-              <div key={col.key} className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
-                <div className="flex items-center justify-between mb-4">
+              <div key={col.key} className="bg-[#0d0d18] border border-neutral-800/60 rounded-2xl p-4">
+                <div className="flex items-center justify-between mb-5">
                   <div className="flex items-center gap-2">
                     <div className={`w-1.5 h-1.5 rounded-full ${col.dotClass}`} />
                     <span className={`text-sm font-semibold ${col.labelClass}`}>{col.label}</span>
                   </div>
-                  <span className="text-gray-700 text-xs bg-white/5 px-2 py-0.5 rounded-full">
+                  <span className={`text-neutral-600 text-xs bg-white/[0.04] ring-1 ${col.ringClass} px-2 py-0.5 rounded-full font-medium`}>
                     {colTasks.length}
                   </span>
                 </div>
 
                 <div className="space-y-2.5">
                   {colTasks.length === 0 ? (
-                    <div className="border border-dashed border-white/5 rounded-lg py-7 text-center">
-                      <p className="text-gray-700 text-xs">No tasks</p>
+                    <div className="border border-dashed border-neutral-800 rounded-xl py-8 text-center">
+                      <p className="text-neutral-700 text-xs">No tasks</p>
                     </div>
                   ) : (
                     colTasks.map(task => (
                       <div
                         key={task.id}
-                        className="bg-white/[0.03] border border-white/[0.06] rounded-lg p-3.5 hover:bg-white/5 transition"
+                        className="group bg-[#0f0f1a] border border-neutral-800 rounded-xl p-4 hover:border-neutral-700 hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)] transition-all duration-200"
                       >
-                        <div className="flex items-start justify-between gap-2 mb-2">
-                          <h4 className="text-gray-100 text-sm font-medium leading-snug">{task.title}</h4>
-                          <div className="flex items-center gap-1 shrink-0">
+                        <div className="flex items-start justify-between gap-2 mb-2.5">
+                          <h4 className="text-neutral-200 text-sm font-medium leading-snug tracking-[-0.1px]">{task.title}</h4>
+                          <div className="flex items-center gap-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
                             <button
                               onClick={() => openEdit(task)}
-                              className="text-gray-600 hover:text-blue-400 text-[11px] font-medium px-1.5 py-0.5 rounded transition"
+                              className="text-neutral-600 hover:text-indigo-400 text-[11px] font-medium px-1.5 py-0.5 rounded-md transition-colors"
                             >
                               Edit
                             </button>
                             {isAdmin && (
                               <button
                                 onClick={() => handleDelete(task.id)}
-                                className="text-gray-600 hover:text-red-400 text-[11px] font-medium px-1.5 py-0.5 rounded transition"
+                                className="text-neutral-600 hover:text-rose-400 text-[11px] font-medium px-1.5 py-0.5 rounded-md transition-colors"
                               >
                                 Delete
                               </button>
@@ -219,23 +228,23 @@ export default function ProjectDetail() {
                         </div>
 
                         {task.description && (
-                          <p className="text-gray-600 text-xs leading-relaxed mb-2.5 line-clamp-2">{task.description}</p>
+                          <p className="text-neutral-600 text-xs leading-relaxed mb-3 line-clamp-2">{task.description}</p>
                         )}
 
                         <div className="flex flex-wrap gap-1.5 mb-3">
-                          <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md capitalize ${priorityClass(task.priority)}`}>
+                          <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-[5px] capitalize ${priorityBadge(task.priority)}`}>
                             {task.priority}
                           </span>
                           {task.assignee && (
-                            <span className="text-[10px] text-gray-500 bg-white/5 px-2 py-0.5 rounded-md">
+                            <span className="text-[10px] text-neutral-500 bg-white/[0.04] ring-1 ring-neutral-800 px-2 py-0.5 rounded-[5px]">
                               {task.assignee.name}
                             </span>
                           )}
                           {task.due_date && (
-                            <span className={`text-[10px] px-2 py-0.5 rounded-md ${
+                            <span className={`text-[10px] px-2 py-0.5 rounded-[5px] font-medium ${
                               new Date(task.due_date) < new Date() && task.status !== 'done'
-                                ? 'bg-red-500/10 text-red-400'
-                                : 'text-gray-600 bg-white/5'
+                                ? 'bg-rose-500/10 text-rose-400 ring-1 ring-rose-500/20'
+                                : 'text-neutral-600 bg-white/[0.04] ring-1 ring-neutral-800'
                             }`}>
                               {new Date(task.due_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                             </span>
@@ -245,7 +254,7 @@ export default function ProjectDetail() {
                         <select
                           value={task.status}
                           onChange={(e) => handleStatusChange(task.id, e.target.value)}
-                          className="w-full bg-black/20 border border-white/5 text-gray-500 text-[11px] rounded-md px-2.5 py-1.5 outline-none cursor-pointer"
+                          className="w-full bg-black/20 border border-neutral-800 hover:border-neutral-700 text-neutral-500 text-[11px] rounded-lg px-2.5 py-1.5 outline-none cursor-pointer transition-colors"
                         >
                           <option value="todo">To Do</option>
                           <option value="in_progress">In Progress</option>
@@ -261,27 +270,37 @@ export default function ProjectDetail() {
         </div>
       </div>
 
-      {/* modal */}
+      {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 px-4">
-          <div className="bg-[#0f0f17] border border-white/10 rounded-2xl p-7 w-full max-w-md max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-white font-semibold text-lg">{editTask ? 'Edit Task' : 'New Task'}</h2>
-              <button onClick={() => setShowModal(false)} className="text-gray-600 hover:text-white text-2xl leading-none transition">&times;</button>
+        <div className="fixed inset-0 bg-black/75 backdrop-blur-md flex items-center justify-center z-50 px-4">
+          <div className="bg-[#0f0f1a] border border-neutral-800 rounded-2xl p-8 w-full max-w-md max-h-[90vh] overflow-y-auto shadow-2xl">
+            <div className="flex items-center justify-between mb-7">
+              <h2
+                className="text-neutral-50 font-bold text-lg"
+                style={{ fontFamily: "'Syne', sans-serif", letterSpacing: '-0.3px' }}
+              >
+                {editTask ? 'Edit Task' : 'New Task'}
+              </h2>
+              <button
+                onClick={() => setShowModal(false)}
+                className="text-neutral-600 hover:text-neutral-300 text-2xl leading-none transition-colors w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/[0.05]"
+              >
+                &times;
+              </button>
             </div>
 
             {error && (
-              <div className="flex items-center gap-2 bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-lg mb-5 text-sm">
-                <div className="w-1.5 h-1.5 rounded-full bg-red-400 shrink-0" />
+              <div className="flex items-center gap-2 bg-rose-500/[0.07] border border-rose-500/20 text-rose-400 px-4 py-3 rounded-xl mb-5 text-sm">
+                <div className="w-1.5 h-1.5 rounded-full bg-rose-400 shrink-0" />
                 {error}
               </div>
             )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
 
-              {/* title */}
+              {/* Title */}
               <div className="flex flex-col gap-1.5">
-                <label className="text-gray-400 text-sm font-medium">Title</label>
+                <label className="text-neutral-500 text-[13px] font-medium">Title</label>
                 <input
                   type="text"
                   placeholder="What needs to be done?"
@@ -291,27 +310,29 @@ export default function ProjectDetail() {
                   disabled={!isAdmin}
                   required
                 />
-                {!isAdmin && <span className="text-gray-600 text-xs">Admin only</span>}
+                {!isAdmin && <span className="text-neutral-700 text-xs">Admin only</span>}
               </div>
 
-              {/* description */}
+              {/* Description */}
               <div className="flex flex-col gap-1.5">
-                <label className="text-gray-400 text-sm font-medium">Description <span className="text-gray-600">(optional)</span></label>
+                <label className="text-neutral-500 text-[13px] font-medium">
+                  Description <span className="text-neutral-700">(optional)</span>
+                </label>
                 <textarea
-                  placeholder="Add more context..."
+                  placeholder="Add more context…"
                   value={form.description}
                   onChange={(e) => setForm({ ...form, description: e.target.value })}
                   className={isAdmin ? `${inputClass} resize-none min-h-[80px]` : `${disabledInputClass} resize-none min-h-[80px]`}
                   disabled={!isAdmin}
                   rows={3}
                 />
-                {!isAdmin && <span className="text-gray-600 text-xs">Admin only</span>}
+                {!isAdmin && <span className="text-neutral-700 text-xs">Admin only</span>}
               </div>
 
-              {/* priority + status */}
+              {/* Priority + Status */}
               <div className="grid grid-cols-2 gap-3">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-gray-400 text-sm font-medium">Priority</label>
+                  <label className="text-neutral-500 text-[13px] font-medium">Priority</label>
                   <select
                     value={form.priority}
                     onChange={(e) => setForm({ ...form, priority: e.target.value })}
@@ -322,11 +343,11 @@ export default function ProjectDetail() {
                     <option value="medium">Medium</option>
                     <option value="high">High</option>
                   </select>
-                  {!isAdmin && <span className="text-gray-600 text-xs">Admin only</span>}
+                  {!isAdmin && <span className="text-neutral-700 text-xs">Admin only</span>}
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-gray-400 text-sm font-medium">Status</label>
+                  <label className="text-neutral-500 text-[13px] font-medium">Status</label>
                   <select
                     value={form.status}
                     onChange={(e) => setForm({ ...form, status: e.target.value })}
@@ -339,10 +360,10 @@ export default function ProjectDetail() {
                 </div>
               </div>
 
-              {/* assignee + due date */}
+              {/* Assignee + Due Date */}
               <div className="grid grid-cols-2 gap-3">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-gray-400 text-sm font-medium">Assignee</label>
+                  <label className="text-neutral-500 text-[13px] font-medium">Assignee</label>
                   <select
                     value={form.assignee_id}
                     onChange={(e) => setForm({ ...form, assignee_id: e.target.value })}
@@ -354,11 +375,11 @@ export default function ProjectDetail() {
                       <option key={u.id} value={u.id}>{u.name}</option>
                     ))}
                   </select>
-                  {!isAdmin && <span className="text-gray-600 text-xs">Admin only</span>}
+                  {!isAdmin && <span className="text-neutral-700 text-xs">Admin only</span>}
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-gray-400 text-sm font-medium">Due Date</label>
+                  <label className="text-neutral-500 text-[13px] font-medium">Due Date</label>
                   <input
                     type="date"
                     value={form.due_date}
@@ -366,22 +387,23 @@ export default function ProjectDetail() {
                     className={isAdmin ? inputClass : disabledInputClass}
                     disabled={!isAdmin}
                   />
-                  {!isAdmin && <span className="text-gray-600 text-xs">Admin only</span>}
+                  {!isAdmin && <span className="text-neutral-700 text-xs">Admin only</span>}
                 </div>
               </div>
 
-              {/* buttons */}
+              {/* Buttons */}
               <div className="flex gap-3 pt-2">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="flex-1 bg-white/5 hover:bg-white/10 border border-white/10 text-gray-400 py-2.5 rounded-lg text-sm transition"
+                  className="flex-1 bg-white/[0.04] hover:bg-white/[0.07] border border-neutral-800 text-neutral-400 py-2.5 rounded-xl text-sm font-medium transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-lg text-sm font-semibold transition"
+                  className="flex-1 text-white py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 hover:opacity-90"
+                  style={{ background: 'linear-gradient(135deg,#6366f1,#818cf8)', boxShadow: '0 8px 32px rgba(99,102,241,0.2)' }}
                 >
                   {editTask ? 'Update Task' : 'Create Task'}
                 </button>

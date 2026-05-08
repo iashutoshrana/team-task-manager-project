@@ -11,58 +11,63 @@ export default function Navbar() {
     navigate('/login')
   }
 
-  return (
-    <nav className="bg-[#0a0a0f]/95 border-b border-white/[0.06] sticky top-0 z-40 backdrop-blur-md">
-      <div className="max-w-7xl mx-auto px-6 h-13 flex items-center justify-between" style={{height:'52px'}}>
+  const navLink = (to, label, exact = false) => {
+    const isActive = exact ? location.pathname === to : location.pathname.startsWith(to)
+    return (
+      <Link
+        to={to}
+        className={`text-[13px] font-medium px-3 py-1.5 rounded-lg transition-all duration-200 tracking-[0.01em] ${
+          isActive
+            ? 'text-neutral-100 bg-white/[0.07]'
+            : 'text-neutral-600 hover:text-neutral-300 hover:bg-white/[0.04]'
+        }`}
+      >
+        {label}
+      </Link>
+    )
+  }
 
+  return (
+    <nav className="bg-[#09090f]/90 border-b border-neutral-800/60 sticky top-0 z-50 backdrop-blur-xl">
+      <div className="max-w-7xl mx-auto px-8 flex items-center justify-between" style={{ height: 56 }}>
+
+        {/* Left */}
         <div className="flex items-center gap-8">
-          <Link to="/" className="flex items-center gap-2.5 shrink-0">
-            <div className="w-6 h-6 rounded-lg shrink-0" style={{background:'linear-gradient(135deg,#3b82f6,#6366f1)',transform:'rotate(12deg)'}} />
-            <span className="text-white font-bold text-[15px] tracking-tight">Taskflow</span>
+          <Link to="/" className="flex items-center gap-2.5 shrink-0 group">
+            <div
+              className="w-6 h-6 rounded-[7px] shrink-0 transition-transform duration-300 group-hover:rotate-[24deg]"
+              style={{ background: 'linear-gradient(135deg,#6366f1,#818cf8)', transform: 'rotate(12deg)' }}
+            />
+            <span className="text-neutral-100 font-bold text-[15px] tracking-tight" style={{ fontFamily: "'Syne', sans-serif" }}>
+              Taskflow
+            </span>
           </Link>
 
-          <div className="flex items-center gap-1">
-            <Link
-              to="/"
-              className={`text-sm px-3 py-1.5 rounded-md font-medium transition-all duration-200 ${
-                location.pathname === '/'
-                  ? 'text-white bg-white/[0.08]'
-                  : 'text-gray-600 hover:text-white hover:bg-white/[0.05]'
-              }`}
-            >
-              Overview
-            </Link>
-            <Link
-              to="/projects"
-              className={`text-sm px-3 py-1.5 rounded-md font-medium transition-all duration-200 ${
-                location.pathname.startsWith('/projects')
-                  ? 'text-white bg-white/[0.08]'
-                  : 'text-gray-600 hover:text-white hover:bg-white/[0.05]'
-              }`}
-            >
-              Projects
-            </Link>
+          <div className="flex items-center gap-0.5">
+            {navLink('/', 'Overview', true)}
+            {navLink('/projects', 'Projects')}
           </div>
         </div>
 
+        {/* Right */}
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-full bg-blue-500/10 border border-blue-500/25 flex items-center justify-center shrink-0">
-              <span className="text-blue-400 text-xs font-bold leading-none">
+            <div className="w-[30px] h-[30px] rounded-full bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center shrink-0">
+              <span className="text-indigo-400 text-[11px] font-bold leading-none">
                 {user?.name?.charAt(0).toUpperCase()}
               </span>
             </div>
             <div className="hidden md:flex flex-col gap-0.5">
-              <span className="text-white text-sm font-medium leading-none">{user?.name}</span>
-              <span className="text-gray-600 text-[11px] capitalize leading-none">{user?.role}</span>
+              <span className="text-neutral-200 text-[13px] font-medium leading-none">{user?.name}</span>
+              <span className="text-neutral-600 text-[10px] capitalize leading-none tracking-wide">{user?.role}</span>
             </div>
           </div>
 
-          <div className="w-px h-5 bg-white/[0.07] mx-1" />
+          <div className="w-px h-4 bg-neutral-800 mx-0.5" />
 
           <button
             onClick={handleLogout}
-            className="text-gray-600 hover:text-white text-xs font-medium px-3 py-1.5 rounded-md border border-white/[0.07] hover:border-white/[0.15] transition-all duration-200"
+            className="text-neutral-500 hover:text-neutral-300 text-[12px] font-medium px-3 py-1.5 rounded-lg border border-neutral-800 hover:border-neutral-700 transition-all duration-200"
           >
             Sign out
           </button>
