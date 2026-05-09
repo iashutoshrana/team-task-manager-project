@@ -5,13 +5,18 @@ require('./models/index')
 
 const app = express()
 
-app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: false
-}))
+// handle cors manually
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end()
+  }
+  next()
+})
 
+app.use(cors())
 app.use(express.json())
 
 app.use('/api/auth', require('./routes/auth'))
@@ -23,7 +28,7 @@ app.get('/', (req, res) => {
   res.json({ message: 'Task Manager API running' })
 })
 
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 8080
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
